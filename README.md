@@ -6,13 +6,13 @@
 Clone the repo
 
 ```
-git clone https://github.com/Symphoria/attendance-portal.git
+git clone https://github.com/Symphoria/attendance_portal.git
 ```
 
 Go into the project directory
 
 ```
-cd attendance-portal
+cd attendance_portal
 ```
 
 Run `setup.py` python file. It will install all the dependencies for the project in a virtual environment by the name `py-env` and also install the postgresql database.
