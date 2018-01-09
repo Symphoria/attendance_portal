@@ -82,3 +82,9 @@ You can start the server by writing the command
 ```
 python manage.py runserver
 ```
+
+
+## Login to the Portal
+You can login using any username but password should be "pass"
+Eg. Username: iit2016060
+    Password: pass

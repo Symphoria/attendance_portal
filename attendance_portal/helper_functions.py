@@ -65,3 +65,28 @@ def get_tokens(total_students, no_of_tokens):
         token_list.append(d)
 
     return token_list
+
+
+def ldap_auth():
+    import ldap
+
+    ldap_server = "ldap://172.31.1.42:389"
+    username = "IIT2016060"
+    password = "RS9811587211"
+    # the following is the user_dn format provided by the ldap server
+    user_dn = "uid=" + username + ",ou=Student,dc=iiita,dc=ac,dc=in"
+    # adjust this to your base dn for searching
+    base_dn = "dc=iiita,dc=ac,dc=in"
+    connect = ldap.initialize(ldap_server)
+    search_filter = "uid=" + username
+    try:
+        # if authentication successful, get the full user data
+        result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
+        # connect.bind_s(user_dn, password)
+
+        # return all user data results
+        # connect.unbind_s()
+        print result
+    except ldap.LDAPError:
+        connect.unbind_s()
+        print "authentication error"

@@ -142,7 +142,7 @@ class StudentCourseView(APIView):
 
         if a_course:
             student_course = StudentCourse.objects.filter(student=student, course=a_course, section=section,
-                                         semester=semester).first()
+                                                          semester=semester).first()
 
             if student_course:
                 student_course.delete()
@@ -229,7 +229,7 @@ class StudentAttendanceView(APIView):
                 if attendance_token_obj.token_accepted < attendance_token_obj.token_issued:
                     student_course = StudentCourse.objects.get(student=student, course=course)
                     attendance = Attendance.objects.filter(student_course=student_course,
-                                                        lecture=attendance_token_obj.lecture).first()
+                                                           lecture=attendance_token_obj.lecture).first()
 
                     if attendance:
                         if attendance.is_present is False:
