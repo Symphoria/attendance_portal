@@ -18,7 +18,7 @@ function getCookie(name) {
 var csrftoken = getCookie('csrftoken');
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
 }
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
@@ -53,6 +53,79 @@ var ratingMap = {
 let d = new Date();
 let m = d.getMonth() + 1;
 globalObject.currentMonth = m;
+
+function getStudentCourses() {
+    $('div#course-wrapper').empty();
+
+    var loader = document.createElement('div');
+    loader.setAttribute('class', 'loader');
+    $('div#course-wrapper').append(loader);
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            'authorization-token': globalObject.authToken
+        },
+        url: 'http://127.0.0.1:8000/api/students',
+        success: function (data) {
+            $('div#course-wrapper').empty();
+            data.coursesTaken.forEach(function (element) {
+                var box = document.createElement("div");
+                box.setAttribute('class', 'col-sm-4 col-lg-4 col-md-5');
+                var thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail';
+                thumbnail.innerHTML += "<center><div class='caption'><h3>" + element.course_code + "</h3><h5>" + element.course_name +
+                    "</h5><button id='" + element.course_code + "' class='btn btn-success view-student-attendance'>View Attendance</button></div></center>";
+                $(box).append(thumbnail);
+                $('div#course-wrapper').append(box);
+            }, this);
+        }
+    })
+}
+
+function getProfessorCourses() {
+    $('div#course-wrapper').empty();
+
+    var loader = document.createElement('div');
+    loader.setAttribute('class', 'loader');
+    $('div#course-wrapper').append(loader);
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            'authorization-token': globalObject.authToken
+        },
+        url: "http://127.0.0.1:8000/api/faculty/course",
+        success: function (data) {
+            $('div#course-wrapper').empty();
+
+            data.forEach(function (element) {
+                var box = document.createElement("div");
+                box.setAttribute('class', 'col-sm-4 col-lg-4 col-md-5');
+                var thumbnail = document.createElement('div');
+                thumbnail.className = 'thumbnail';
+                thumbnail.innerHTML += `<center>
+                    <div class="caption">
+                        <h3>` + element.course_name + `</h3>
+                        <h4 id="courseCode">` + element.course_code + `</h4>
+                    </div>
+                    <!-- View Token -->
+                    <div class="caption">
+                        <button id="generateTokens" class="btn btn-primary" data-toggle="modal" data-target="#myModalNorm" data-coursecode="` + element.course_code + `">
+                            Generate Tokens
+                        </button>
+                        <br>
+
+                    </div>
+                </center>`;
+                $(box).append(thumbnail);
+                $('div#course-wrapper.row').append(box);
+            }, this);
+        }
+    })
+}
 
 $('button#student.btn.btn-success.login').click(function () {
     $.ajax({
@@ -103,67 +176,11 @@ $('button#professor.btn.btn-success.login').click(function () {
 });
 
 if (window.location.href.split('/').reverse()[0] == 'student') {
-    document.addEventListener('DOMContentLoaded', function () {
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            headers: {
-                'authorization-token': globalObject.authToken
-            },
-            url: 'http://127.0.0.1:8000/api/students',
-            success: function (data) {
-                $('div#course-wrapper').empty();
-                data.coursesTaken.forEach(function (element) {
-                    var box = document.createElement("div");
-                    box.setAttribute('class', 'col-sm-4 col-lg-4 col-md-5');
-                    var thumbnail = document.createElement('div');
-                    thumbnail.className = 'thumbnail';
-                    thumbnail.innerHTML += "<center><div class='caption'><h3>" + element.course_code + "</h3><h5>" + element.course_name +
-                        "</h5><button id='" + element.course_code + "' class='btn btn-success view-student-attendance'>View Attendance</button></div></center>";
-                    $(box).append(thumbnail);
-                    $('div#course-wrapper').append(box);
-                }, this);
-            }
-        })
-    })
+    document.addEventListener('DOMContentLoaded', getStudentCourses);
 }
 
 if (window.location.href.split('/').reverse()[0] == 'professor') {
-    document.addEventListener('DOMContentLoaded', function () {
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            headers: {
-                'authorization-token': globalObject.authToken
-            },
-            url: "http://127.0.0.1:8000/api/faculty/course",
-            success: function (data) {
-                console.log(data);
-                data.forEach(function (element) {
-                    var box = document.createElement("div");
-                    box.setAttribute('class', 'col-sm-4 col-lg-4 col-md-5');
-                    var thumbnail = document.createElement('div');
-                    thumbnail.className = 'thumbnail';
-                    thumbnail.innerHTML += `<center>
-                    <div class="caption">
-                        <h3>` + element.course_name + `</h3>
-                        <h4 id="courseCode">` + element.course_code + `</h4>
-                    </div>
-                    <!-- View Token -->
-                    <div class="caption">
-                        <button id="generateTokens" class="btn btn-primary" data-toggle="modal" data-target="#myModalNorm" data-coursecode="` + element.course_code + `">
-                            Generate Tokens
-                        </button>
-                        <br>
-
-                    </div>
-                </center>`;
-                    $(box).append(thumbnail);
-                    $('div#course-wrapper.row').append(box);
-                }, this);
-            }
-        })
-    })
+    document.addEventListener('DOMContentLoaded', getProfessorCourses);
 }
 
 $('button#add-course-professor.btn.btn-success').click(function() {
@@ -179,9 +196,10 @@ $('button#add-course-professor.btn.btn-success').click(function() {
         },
         success: function (data) {
             $('p#error-message').text(data);
+            getProfessorCourses();
         },
         error: function (error) {
-            $('p#error-message').text(data);
+            $('p#error-message').text(error);
         }
     })
 });
@@ -199,6 +217,7 @@ $('button#remove-course-professor.btn.btn-danger').click(function() {
         },
         success: function (data) {
             $('p#error-message').text(data);
+            getProfessorCourses();
         },
         error: function (error) {
             $('p#error-message').text(data);
@@ -221,9 +240,10 @@ $('button#add-course-student.btn.btn-success').click(function() {
         },
         success: function (data) {
             $('p#error-message').text(data);
+            getStudentCourses();
         },
         error: function (error) {
-            $('h4#error-message').text(data);
+            $('h4#error-message').text(error);
         }
     })
 });
@@ -244,6 +264,7 @@ $('button#remove-course-student.btn.btn-danger').click(function() {
         success: function (data) {
             console.log(data);
             $('h4#error-message').text(data);
+            getStudentCourses();
         },
         error: function (error) {
             console.log(error);
