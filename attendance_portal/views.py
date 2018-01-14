@@ -136,7 +136,7 @@ class StudentCourseView(APIView):
     def delete(self, request):
         semester = request.data['semester']
         course = request.data['course']
-        section = request.data['section']
+        section = request.data['section'].upper()
         student = request.user
         a_course = Course.objects.filter(course_code=course.lower()).first()
 

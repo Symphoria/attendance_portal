@@ -195,7 +195,7 @@ $('button#add-course-professor.btn.btn-success').click(function() {
             "course": $('input#add-course-courseId.form-control').val()
         },
         success: function (data) {
-            $('p#error-message').text(data);
+            $('p#error-messag').text(data);
             getProfessorCourses();
         },
         error: function (error) {
@@ -239,7 +239,7 @@ $('button#add-course-student.btn.btn-success').click(function() {
             "section": $('input#add-course-section.form-control').val()
         },
         success: function (data) {
-            $('p#error-message').text(data);
+            $('h4#error-message').text(data);
             getStudentCourses();
         },
         error: function (error) {
@@ -302,6 +302,11 @@ $('button#course-attendance.btn.btn-primary').on('click', function () {
     let course = $('input#attendance-courseId.form-control').val();
     let section = $('input#attendance-section.form-control').val();
     let month = $('input#attendance-month.form-control').val();
+    $('div#course-attendance-wrapper.container.table-responsive.table-hover').empty();
+
+    var loader = document.createElement('div');
+    loader.setAttribute('class', 'loader');
+    $('div#course-attendance-wrapper.container.table-responsive.table-hover').append(loader);
     globalObject.currentMonth = month;
     $.ajax({
         type: 'GET',
@@ -311,7 +316,7 @@ $('button#course-attendance.btn.btn-primary').on('click', function () {
         },
         url: "http://127.0.0.1:8000/api/attendance/course?course=" + course + "&section=" + section + "&month=" + month,
         success: function (data) {
-            $('p#error-message').text("");
+            $('h3#down-error-message').text("");
             let htmlString = `<center><h3>` + course.toUpperCase() + `</h3></center><center><h4>` + data.rating + `</h4></center>
 
     <table class="table table-hover">
@@ -363,7 +368,7 @@ $('button#course-attendance.btn.btn-primary').on('click', function () {
         },
         error: function (error) {
             $('div#course-attendance-wrapper').empty();
-            $('p#error-message').text(error.responseText);
+            $('h3#down-error-message').text(error.responseText);
 
         }
     })
@@ -510,6 +515,12 @@ $('button#log-out.btn.btn-warning').click(function() {
 
 $('#course-wrapper').on("click", "button.btn.btn-success.view-student-attendance", function () {
     globalObject.course = $(this).attr("id");
+
+    $('div#attendance-wrapper').empty();
+
+    var loader = document.createElement('div');
+    loader.setAttribute('class', 'loader');
+    $('div#attendance-wrapper').append(loader);
     $.ajax({
         type: 'GET',
         dataType: 'json',
@@ -564,7 +575,8 @@ $('#course-wrapper').on("click", "button.btn.btn-success.view-student-attendance
             $('div#attendance-wrapper').append(htmlString);
         },
         error: function (error) {
-            $('h4#error-message').text(error);
+            $('div#attendance-wrapper').empty();
+            $('h4#error-message').text(error.responseText);
         }
     });
 });
