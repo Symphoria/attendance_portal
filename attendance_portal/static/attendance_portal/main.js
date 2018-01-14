@@ -67,7 +67,7 @@ function getStudentCourses() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: 'https://attendance-portal.herokuapp.com/api/students',
+        url: 'http://127.0.0.1:8000/api/students',
         success: function (data) {
             $('div#course-wrapper').empty();
             data.coursesTaken.forEach(function (element) {
@@ -97,7 +97,7 @@ function getProfessorCourses() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/faculty/course",
+        url: "http://127.0.0.1:8000/api/faculty/course",
         success: function (data) {
             $('div#course-wrapper').empty();
 
@@ -131,7 +131,7 @@ $('button#student.btn.btn-success.login').click(function () {
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: 'https://attendance-portal.herokuapp.com/api/login',
+        url: 'http://127.0.0.1:8000/api/login',
         data: {
             'userType': $(this).attr('id'),
             'userName': $('input#studentUsername').val(),
@@ -143,7 +143,7 @@ $('button#student.btn.btn-success.login').click(function () {
         success: function (data) {
             localStorage.setItem('authToken', data.authToken);
             globalObject.authToken = data.authToken;
-            window.location.href = "https://attendance-portal.herokuapp.com/student";
+            window.location.href = "http://127.0.0.1:8000/student";
         },
         error: function (error) {
             console.log(error);
@@ -155,7 +155,7 @@ $('button#professor.btn.btn-success.login').click(function () {
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: 'https://attendance-portal.herokuapp.com/api/login',
+        url: 'http://127.0.0.1:8000/api/login',
         data: {
             'userType': $(this).attr('id'),
             'userName': $('input#professorUsername').val(),
@@ -167,7 +167,7 @@ $('button#professor.btn.btn-success.login').click(function () {
         success: function (data) {
             localStorage.setItem('authToken', data.authToken);
             globalObject.authToken = data.authToken;
-            window.location.href = "https://attendance-portal.herokuapp.com/professor";
+            window.location.href = "http://127.0.0.1:8000/professor";
         },
         error: function (error) {
             console.log(error);
@@ -190,7 +190,7 @@ $('button#add-course-professor.btn.btn-success').click(function() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/faculty/course",
+        url: "http://127.0.0.1:8000/api/faculty/course",
         data: {
             "course": $('input#add-course-courseId.form-control').val()
         },
@@ -211,7 +211,7 @@ $('button#remove-course-professor.btn.btn-danger').click(function() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/faculty/course",
+        url: "http://127.0.0.1:8000/api/faculty/course",
         data: {
             "course": $('input#add-course-courseId.form-control').val()
         },
@@ -232,7 +232,7 @@ $('button#add-course-student.btn.btn-success').click(function() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/student/course",
+        url: "http://127.0.0.1:8000/api/student/course",
         data: {
             "course": $('input#add-course-courseId.form-control').val(),
             "semester": $('input#add-course-semester.form-control').val(),
@@ -255,7 +255,7 @@ $('button#remove-course-student.btn.btn-danger').click(function() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/student/course",
+        url: "http://127.0.0.1:8000/api/student/course",
         data: {
             "course": $('input#add-course-courseId.form-control').val(),
             "semester": $('input#add-course-semester.form-control').val(),
@@ -280,7 +280,7 @@ $('button#update-student.btn.btn-success').click(function() {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/students",
+        url: "http://127.0.0.1:8000/api/students",
         data: {
             "name": $('input#student-name.form-control').val(),
             "email": $('input#student-email.form-control').val(),
@@ -314,7 +314,7 @@ $('button#course-attendance.btn.btn-primary').on('click', function () {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/attendance/course?course=" + course + "&section=" + section + "&month=" + month,
+        url: "http://127.0.0.1:8000/api/attendance/course?course=" + course + "&section=" + section + "&month=" + month,
         success: function (data) {
             $('h3#down-error-message').text("");
             let htmlString = `<center><h3>` + course.toUpperCase() + `</h3></center><center><h4>` + data.rating + `</h4></center>
@@ -382,7 +382,7 @@ $('button#increase-token.btn.btn-primary').click(function () {
         headers: {
             'authorization-token': globalObject.authToken
         },
-        url: "https://attendance-portal.herokuapp.com/api/attendance-tokens",
+        url: "http://127.0.0.1:8000/api/attendance-tokens",
         data: {
             "token": $('input#attendance-token.form-control').val(),
             "increaseBy": $('input#attendance-count.form-control').val()
@@ -444,7 +444,7 @@ $('button#getTokens').click(function () {
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: 'https://attendance-portal.herokuapp.com/api/attendance-tokens',
+        url: 'http://127.0.0.1:8000/api/attendance-tokens',
         data: {
             "course": $('input#courseId.form-control').val(),
             'section': $('input#section.form-control').val().toUpperCase(),
@@ -478,7 +478,7 @@ $('button#mark-attendance.btn.btn-success').click(function () {
     $.ajax({
         type: 'PUT',
         dataType: 'json',
-        url: 'https://attendance-portal.herokuapp.com/api/attendance/student',
+        url: 'http://127.0.0.1:8000/api/attendance/student',
         data: {
             'attendanceToken': $('input#token.form-control').val(),
             'course': $('input#course.form-control').val(),
@@ -507,13 +507,13 @@ $('button#log-out.btn.btn-warning').click(function() {
     $.ajax({
         type: 'PUT',
         dataType: 'json',
-        url: 'https://attendance-portal.herokuapp.com/api/logout',
+        url: 'http://127.0.0.1:8000/api/logout',
         headers: {
             'authorization-token': globalObject.authToken
         },
         success: function (data) {
             localStorage.removeItem('authToken');
-            window.location.replace("https://attendance-portal.herokuapp.com");
+            window.location.replace("http://127.0.0.1:8000");
         },
         error: function (error) {
             alert(error.responseText);
@@ -532,7 +532,7 @@ $('#course-wrapper').on("click", "button.btn.btn-success.view-student-attendance
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: "https://attendance-portal.herokuapp.com/api/attendance/student?course=" + $(this).attr("id"),
+        url: "http://127.0.0.1:8000/api/attendance/student?course=" + $(this).attr("id"),
         headers: {
             'authorization-token': globalObject.authToken
         },
