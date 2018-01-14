@@ -195,11 +195,11 @@ $('button#add-course-professor.btn.btn-success').click(function() {
             "course": $('input#add-course-courseId.form-control').val()
         },
         success: function (data) {
-            $('p#error-messag').text(data);
+            alert(data.responseText);
             getProfessorCourses();
         },
         error: function (error) {
-            $('p#error-message').text(error);
+            alert(error.responseText);
         }
     })
 });
@@ -216,11 +216,11 @@ $('button#remove-course-professor.btn.btn-danger').click(function() {
             "course": $('input#add-course-courseId.form-control').val()
         },
         success: function (data) {
-            $('p#error-message').text(data);
+            alert(data.responseText);
             getProfessorCourses();
         },
         error: function (error) {
-            $('p#error-message').text(data);
+            alert(error.responseText);
         }
     })
 });
@@ -239,11 +239,11 @@ $('button#add-course-student.btn.btn-success').click(function() {
             "section": $('input#add-course-section.form-control').val()
         },
         success: function (data) {
-            $('h4#error-message').text(data);
+            alert(data);
             getStudentCourses();
         },
         error: function (error) {
-            $('h4#error-message').text(error);
+            alert(error.responseText);
         }
     })
 });
@@ -263,12 +263,12 @@ $('button#remove-course-student.btn.btn-danger').click(function() {
         },
         success: function (data) {
             console.log(data);
-            $('h4#error-message').text(data);
+            alert(data);
             getStudentCourses();
         },
         error: function (error) {
             console.log(error);
-            $('h4#error-message').text(error);
+            alert(error.responseText);
         }
     })
 });
@@ -289,11 +289,11 @@ $('button#update-student.btn.btn-success').click(function() {
         },
         success: function (data) {
             console.log(data);
-            $('h4#error-message').text(data);
+            alert(data);
         },
         error: function (error) {
             console.log(error);
-            $('h4#error-message').text(data);
+            alert(error.responseText);
         }
     })
 });
@@ -368,7 +368,7 @@ $('button#course-attendance.btn.btn-primary').on('click', function () {
         },
         error: function (error) {
             $('div#course-attendance-wrapper').empty();
-            $('h3#down-error-message').text(error.responseText);
+            alert(error.responseText);
 
         }
     })
@@ -389,15 +389,22 @@ $('button#increase-token.btn.btn-primary').click(function () {
         },
         success: function (data) {
             $(this).addClass("disable");
-            $('p#error-message').text(data);
+            alert(data);
         },
         error: function (error) {
-            $('p#error-message').text(data);
+            alert(error.responseText);
         }
     })
 });
 
 $('button#getTokens').click(function () {
+    $('#myModalNorm').modal('hide');
+    $('div#attendance-wrapper').empty();
+
+    var loader = document.createElement('div');
+    loader.setAttribute('class', 'loader');
+    $('div#attendance-wrapper').append(loader);
+
     var lectureType, noOfLectures;
 
     if (document.getElementById('lab').checked) {
@@ -452,7 +459,6 @@ $('button#getTokens').click(function () {
             'authorization-token': globalObject.authToken
         },
         success: function (data) {
-            $('#myModalNorm').modal('hide');
             $('div#all-tokens-wrapper.row').empty();
             data.forEach(function (element) {
                 let box = document.createElement("div");
@@ -463,7 +469,7 @@ $('button#getTokens').click(function () {
 
         },
         error: function (error) {
-            console.log(error);
+            alert(error.responseText);
         }
     });
 });
@@ -483,10 +489,12 @@ $('button#mark-attendance.btn.btn-success').click(function () {
             'authorization-token': globalObject.authToken
         },
         success: function (data) {
-            $('p#error-message').text(data.responseText);
+            console.log(data);
+            alert(data);
         },
         error: function (error) {
             console.log(error);
+            alert(error.responseText);
         }
     });
 });
@@ -508,7 +516,7 @@ $('button#log-out.btn.btn-warning').click(function() {
             window.location.replace("http://127.0.0.1:8000");
         },
         error: function (error) {
-            $('h4#error-message').text(error);
+            alert(error.responseText);
         }
     });
 });
@@ -576,7 +584,7 @@ $('#course-wrapper').on("click", "button.btn.btn-success.view-student-attendance
         },
         error: function (error) {
             $('div#attendance-wrapper').empty();
-            $('h4#error-message').text(error.responseText);
+            alert(error.responseText);
         }
     });
 });

@@ -254,9 +254,11 @@ class StudentAttendanceView(APIView):
                                 "Attendance marked of " + student.enrollment_no + " for the course " + course_code,
                                 status=status.HTTP_202_ACCEPTED)
                         else:
-                            return Response("You do not take this course", status=status.HTTP_406_NOT_ACCEPTABLE)
+                            return Response("Attendance already marked", status=status.HTTP_406_NOT_ACCEPTABLE)
                     else:
-                        return Response("Attendance already marked", status=status.HTTP_406_NOT_ACCEPTABLE)
+                        return Response(
+                            "You do not take this course or the token belongs to lecture you did not attend",
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
                     return Response("The token is no longer valid", status=status.HTTP_406_NOT_ACCEPTABLE)
             else:
